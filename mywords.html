@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>MyWords</title>
+    <script src="http://cdn.bootcss.com/vue/2.1.6/vue.min.js"></script>
+    <script src="http://cdn.bootcss.com/axios/0.15.3/axios.min.js"></script>
+    <script src="http://cdn.bootcss.com/blueimp-md5/2.6.0/js/md5.min.js"></script>
+    <script src="http://lib.sinaapp.com/js/jquery/3.1.0/jquery-3.1.0.min.js"></script>
+    <script src="https://unpkg.com/lodash@4.13.1/lodash.min.js"></script>
+</head>
+
+<body>
+        <div id="app">
+            <input type="text" name="word" v-model="question">
+            <p v-html="answer"></p>
+            <!--纯html-->
+            <div class="answer" v-if="basic">
+                <!-- 条件渲染-->
+                <p>
+                    <span v-if="phonetic">注音：[{{phonetic}}]</span>
+                    <template v-if="uk_phonetic">
+                        <span>英：[{{uk_phonetic}}]</span>
+                        <span>美：[{{us_phonetic}}]</span>
+                    </template>
+                </p>
+                <div v-if="explains">
+                    <div>
+                        <h3>基本词典：</h3>
+                        <ol>
+                            <li v-for="item in explains">
+                                {{item}}
+                            </li>
+                        </ol>
+                    </div>
+                    <!--<p v-if="web">{{web}}</p>-->
+                    <div v-if="webs">
+                        <h3>网络释义：</h3>
+                        <ol>
+                            <li v-for="item in webs">
+                                {{item.key}}：{{item.value}}
+                            </li>
+                        </ol>
+                    </div>
+                    <button v-if="explains" onClick="saveToLibing()">记录</button>
+                </div>
+            </div>
+            <div v-else>
+                <p>估计没找到...</p>
+            </div>
+        </div>
+</body>
+<script>
+    var data = {
+        question: "",
+        explains: false,
+        answer: "输入要查询的单词",
+        basic: true,
+        webs: false,
+        phonetic: false,
+        uk_phonetic: false,
+        us_phonetic: false
+    };
+    var vm = new Vue({
+        el: "#app",
+        data: data,
+        watch: {
+            question: function (words) {
+                this.answer = '要查询[' + words + "]?";
+                this.getAnswer();
+            }
+        },
+        methods: {
+            getAnswer: _.debounce(
+                function () {
+                    var vm = this;
+                    //重置Vue对象的data
+                    // Object.assign(this.$data, this.$options.data());
+                    vm.answer = '有道查询中...'
+                    $.ajax({
+                        type: "GET",
+                        url: "http://fanyi.youdao.com/openapi.do?keyfrom=MWords&key=2006756772&type=data&doctype=jsonp&version=1.1&q=" + this.question,
+                        dataType: "jsonp",
+                        jsonpCallback:'show'
+                        // success: function (data) {
+                        //     // console.log(data);
+                        // }
+                    })
+                    // axios.get('http://fanyi.youdao.com/openapi.do?keyfrom=MWords&key=2006756772&type=data&doctype=jsonp&callback=show&version=1.1&q='+this.question, {responseType: 'jsonp'})
+                    //         .then(function (response) {
+                    //             console.log(response);
+                    //             vm.answer = _.capitalize(response.data.answer)
+                    //         })
+                    //         .catch(function (error) {
+                    //             vm.answer = 'Error! Could not reach the API. ' + error
+                    //         })
+                },
+                // 这是我们为用户停止输入等待的毫秒数
+                2000
+            )
+        }
+    })
+    function show(data) {
+        vm.basic = data.basic;
+        if (vm.basic) {
+            vm.explains = data.basic.explains;
+            vm.phonetic = data.basic.phonetic;
+            vm.uk_phonetic = data.basic['uk-phonetic'];
+            vm.us_phonetic = data.basic['us-phonetic'];
+            vm.webs = data.web;
+        }
+
+        vm.answer = "<h3>翻译：" + data.translation + "</h3>";
+    }
+    function result(data){
+        console.log(data);
+    }
+    function saveToLibing(){
+        $.ajax({
+            type:"GET",
+            url:'http://localhost:8888/save',
+            dataType: "jsonp",
+            jsonpCallback:'result'
+        });
+    }
+</script>
+
+</html>
