@@ -6,21 +6,21 @@ const mysql = require('./mysql');
 const config = require('./config');
 
 var server = http.createServer(function (req, res) {
-    let params = url.parse(req.url,true);
-    console.log('request pathname:'+params.pathname);
-    if(params.pathname == '/'){
+    let par = url.parse(req.url,true);
+    console.log('request pathname:'+par.pathname);
+    if(par.pathname == '/'){
         let html  = fs.readFileSync('mywords.html');
         res.write(html);
         res.end();
-    }else if(params.pathname =='/save'){
+    }else if(par.pathname =='/save'){
         //jsonP
-        if(params.query.errorCode == 0){
-            mysql.save(params.query.query,params.query['translation[]']);
-            msg = 'success! save=['+params.query.query+']' ;
+        if(par.query.errorCode == 0){
+            mysql.save(par.query.query,par.query['translation[]']);
+            msg = 'success! save=['+par.query.query+']' ;
         }else{
             msg = 'nothingToDo!';
         }
-        res.end(params.query.callback+"("+JSON.stringify({msg:msg})+")");
+        res.end(par.query.callback+"("+JSON.stringify({msg:msg})+")");
     }else{
         res.writeHead(404);
         res.end();
