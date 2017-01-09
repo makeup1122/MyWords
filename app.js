@@ -6,10 +6,10 @@ const mysql = require('./mysql');
 const config = require('./config');
 
 var server = http.createServer(function (req, res) {
-    let par = url.parse(req.url,true);
+    var par = url.parse(req.url,true);
     console.log('request pathname:'+par.pathname);
     if(par.pathname == '/'){
-        let html  = fs.readFileSync('mywords.html');
+        var html  = fs.readFileSync('index.html');
         res.write(html);
         res.end();
     }else if(par.pathname =='/save'){
@@ -27,7 +27,7 @@ var server = http.createServer(function (req, res) {
     }
 });
 
-server.listen(8888,'0.0.0.0',()=>{
-    console.log('Server running at http://127.0.0.1:8888/');
+server.listen(23544,'0.0.0.0',function(){
+    console.log('Server running at http://0.0.0.0:'+server.address().port+'/');
 });
 
