@@ -9,7 +9,7 @@ var server = http.createServer(function (req, res) {
     let par = url.parse(req.url,true);
     console.log('request pathname:'+par.pathname);
     if(par.pathname == '/'){
-        let html  = fs.readFileSync('mywords.html');
+        let html  = fs.readFileSync('index.html');
         res.write(html);
         res.end();
     }else if(par.pathname =='/save'){
