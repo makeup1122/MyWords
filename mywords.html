@@ -43,7 +43,7 @@
                             </li>
                         </ol>
                     </div>
-                    <button v-if="explains" onClick="saveToLibing()">记录</button>
+                    <!--<button v-if="explains" onClick="saveToLibing()">记录</button>-->
                 </div>
             </div>
             <div v-else>
@@ -75,6 +75,7 @@
             getAnswer: _.debounce(
                 function () {
                     var vm = this;
+                    if(this.question == ''){return;}
                     //重置Vue对象的data
                     // Object.assign(this.$data, this.$options.data());
                     vm.answer = '有道查询中...'
@@ -109,19 +110,21 @@
             vm.uk_phonetic = data.basic['uk-phonetic'];
             vm.us_phonetic = data.basic['us-phonetic'];
             vm.webs = data.web;
+            saveToLibing(data);
         }
 
         vm.answer = "<h3>翻译：" + data.translation + "</h3>";
     }
-    function result(data){
-        console.log(data);
+    function saveResult(data){
+        console.log(data.msg);
     }
-    function saveToLibing(){
+    function saveToLibing(data){
         $.ajax({
             type:"GET",
             url:'http://localhost:8888/save',
+            data:data,
             dataType: "jsonp",
-            jsonpCallback:'result'
+            jsonpCallback:'saveResult'
         });
     }
 </script>
