@@ -17,14 +17,14 @@ exports.save = function(query='',translation='',callback){
     has_query_history(query,function(id){
         // console.log(id);
         if(id){
-            let sql = 'update mywords set times = times+1 ,last_time="" where id = "' +id+'"';
+            let sql = 'update mywords set times = times+1 ,last_time=unix_timestamp(now()) where id = "' +id+'"';
             // console.log(sql);
             connection.query(sql, function(err, rows, fields) {
             if (err) throw err;
                 // console.log('The solution is: ', rows[0].word);
             });
         }else{
-            let sql = "INSERT INTO `test`.`mywords`(`word`,`translation`,`last_time`)VALUES('"+query.trim()+"','"+translation.trim()+"','');";
+            let sql = "INSERT INTO `test`.`mywords`(`word`,`translation`,`last_time`)VALUES('"+query.trim()+"','"+translation.trim()+"',unix_timestamp(now()));";
             // console.log(sql);
             connection.query(sql, function(err, rows, fields) {
             if (err) throw err;
