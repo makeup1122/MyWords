@@ -2,6 +2,7 @@ const http = require('http');
 const fs   = require('fs');
 const url  = require('url');
 const mysql = require('./mysql');
+const exec = require('child_process').exec;
 //加载配置文件
 const config = require('./config');
 const webhookHandler = require('github-webhook-handler');
@@ -40,8 +41,15 @@ webhook.on('error',function(err){
     console.log("error:",err.message);
 })
 webhook.on('push',function(event){
-	console.log('dasdadas');
-    console.log(event);
+	if(event.repository.name != config.webhook.name){
+        console.log('error repository name ');
+    }
+    exec('git pull', function(error, stdout, stderr){
+        if (error) {
+            console.error(`exec error: ${error}`);
+        }
+        console.log(stdout);
+    })
 })
 webhook.on('ping',function(event){
 	console.log(event);
