@@ -41,12 +41,12 @@ webhook.on('error',function(err){
     console.log("error:",err.message);
 })
 webhook.on('push',function(event){
-	if(event.repository.name != config.webhook.name){
+	if(event.payload.repository.name != config.webhook.name){
         console.log('error repository name ');
     }
     exec('git pull', function(error, stdout, stderr){
         if (error) {
-            console.error(`exec error: ${error}`);
+			console.log(error);
         }
         console.log(stdout);
     })
