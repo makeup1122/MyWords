@@ -9,8 +9,8 @@ var webhook = webhookHandler({path:'/webhook',secret:config.webhook.secret})
 //创建Server
 var server = http.createServer(function (req, res) {
 	webhook(req,res,function(err){
-		//res.statusCode = 404;
-		//res.end('no such location');
+		res.statusCode = 404;
+		res.end('no such location');
 		});
     var par = url.parse(req.url,true);
     console.log('request pathname:'+par.pathname);
@@ -28,16 +28,23 @@ var server = http.createServer(function (req, res) {
         }
         res.end(par.query.callback+"("+JSON.stringify({msg:msg})+")");
     }else{
-        res.writeHead(404);
-        res.end("no such function");
+		webhook(req,res,function(err){
+			res.statusCode = 404;
+			res.end('no such location');
+		});
     }
+
 });
 //webhook事件
 webhook.on('error',function(err){
     console.log("error:",err.message);
 })
 webhook.on('push',function(event){
+	console.log('dasdadas');
     console.log(event);
+})
+webhook.on('ping',function(event){
+	console.log(event);
 })
 //监听端口
 server.listen(config.app.port,'0.0.0.0',function(){
