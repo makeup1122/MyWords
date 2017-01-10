@@ -16,7 +16,11 @@
 <body>
         <div id="app">
             <!--绑定question模型和回车事件-->
-            <input type="text" name="word" v-model="question" v-on:keyup.enter="getAnswer">
+            <div class="input-group">
+                <!--<span class="input-group-addon"></span>-->
+                   <input type="text" class="form-control" name="word" v-model="question" v-on:keyup.enter="getAnswer">
+            </div>
+            
             <!--纯html-->
             <div class="answer" v-if="errorCode">
                 <p v-html="answer"></p>
