@@ -69,7 +69,11 @@
         data: data,
         watch: {
             question: function (words) {
-                this.answer = '要查询[ ' + words + ' ]? 请直接按下回车!';
+                if(words != ''){
+                    this.answer = '要查询[ ' + words + ' ]? 请直接按下回车!';
+                }else{
+                    this.answer = '';
+                }
                 // this.getAnswer();
             }
         },

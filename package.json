@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "github-webhook-handler": "^0.6.0",
     "mysql": "^2.12.0"
   }
 }
