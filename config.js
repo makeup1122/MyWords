@@ -10,7 +10,8 @@ var config = {
         database:'test'
     },
     webhook:{
-        secret:'test'
+        secret:'test',
+        name:'MyWords'
     }
 };
 module.exports = config;
