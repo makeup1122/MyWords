@@ -2,12 +2,16 @@ const http = require('http');
 const fs   = require('fs');
 const url  = require('url');
 const mysql = require('./mysql');
-const webhookHandler = require('github-webhook-handler');
-var webhook = webhookHandler({path:'/webhook',secret:config.webhook.secret})
 //加载配置文件
 const config = require('./config');
+const webhookHandler = require('github-webhook-handler');
+var webhook = webhookHandler({path:'/webhook',secret:config.webhook.secret})
 //创建Server
 var server = http.createServer(function (req, res) {
+	webhook(req,res,function(err){
+		//res.statusCode = 404;
+		//res.end('no such location');
+		});
     var par = url.parse(req.url,true);
     console.log('request pathname:'+par.pathname);
     if(par.pathname == '/'){
@@ -25,7 +29,7 @@ var server = http.createServer(function (req, res) {
         res.end(par.query.callback+"("+JSON.stringify({msg:msg})+")");
     }else{
         res.writeHead(404);
-        res.end();
+        res.end("no such function");
     }
 });
 //webhook事件
