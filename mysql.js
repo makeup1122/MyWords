@@ -9,7 +9,7 @@ exports.select = function (sql) {
         if (err) throw err;
         console.log('The solution is: ', rows[0].word);
     });
-    connection.end();
+    connection.end(); 
 }
 exports.save = function (query, translation, callback) {
     if (query == null || query == '') { return false; }
