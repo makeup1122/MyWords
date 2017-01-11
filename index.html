@@ -15,48 +15,48 @@
 </head>
 
 <body>
-        <div id="app">
-            <!--绑定question模型和回车事件-->
-            <div class="input-group">
-                <!--<span class="input-group-addon"></span>-->
-                   <input type="text" class="form-control" name="word" v-model="question" v-on:keyup.enter="getAnswer">
-            </div>
-            
-            <!--纯html-->
-            <div class="answer" v-if="errorCode">
-                <p v-html="answer"></p>
-                <!-- 条件渲染-->
-                <p>
-                    <span v-if="phonetic">注音：[{{phonetic}}]</span>
-                    <template v-if="uk_phonetic">
-                        <span>英：[{{uk_phonetic}}]</span>
-                        <span>美：[{{us_phonetic}}]</span>
-                    </template>
-                </p>
-                <div v-if="explains">
-                    <div>
-                        <h3>基本词典：</h3>
-                        <ol>
-                            <li v-for="item in explains">
-                                {{item}}
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-                <div v-if="webs">
-                    <h3>网络释义：</h3>
+    <div id="app">
+        <!--绑定question模型和回车事件-->
+        <div class="input-group">
+            <!--<span class="input-group-addon"></span>-->
+            <input type="text" class="form-control" name="word" v-model="question" v-on:keyup.enter="getAnswer">
+        </div>
+
+        <!--纯html-->
+        <div class="answer" v-if="errorCode">
+            <p v-html="answer"></p>
+            <!-- 条件渲染-->
+            <p>
+                <span v-if="phonetic">注音：[{{phonetic}}]</span>
+                <template v-if="uk_phonetic">
+                    <span>英：[{{uk_phonetic}}]</span>
+                    <span>美：[{{us_phonetic}}]</span>
+                </template>
+            </p>
+            <div v-if="explains">
+                <div>
+                    <h3>基本词典：</h3>
                     <ol>
-                        <li v-for="item in webs">
-                            {{item.key}}：{{item.value}}
+                        <li v-for="item in explains">
+                            {{item}}
                         </li>
                     </ol>
                 </div>
-                <!--<button v-if="explains" onClick="saveToLibing()">记录</button>-->
             </div>
-            <div v-else>
-                <p>估计没找到...</p>
+            <div v-if="webs">
+                <h3>网络释义：</h3>
+                <ol>
+                    <li v-for="item in webs">
+                        {{item.key}}：{{item.value}}
+                    </li>
+                </ol>
             </div>
+            <!--<button v-if="explains" onClick="saveToLibing()">记录</button>-->
         </div>
+        <div v-else>
+            <p>估计没找到...</p>
+        </div>
+    </div>
 </body>
 <script>
     var data = {
@@ -64,7 +64,7 @@
         explains: false,
         answer: "输入要查询的单词",
         basic: true,
-        errorCode:true,
+        errorCode: true,
         webs: false,
         phonetic: false,
         uk_phonetic: false,
@@ -75,9 +75,9 @@
         data: data,
         watch: {
             question: function (words) {
-                if(words != ''){
+                if (words != '') {
                     this.answer = '要查询[ ' + words + ' ]? 请直接按下回车!';
-                }else{
+                } else {
                     this.answer = '';
                 }
                 // this.getAnswer();
@@ -86,38 +86,38 @@
         methods: {
             // getAnswer: _.debounce(
             getAnswer:
-                function () {
-                    var vm = this;
-                    if(this.question == ''){return;}
-                    //重置Vue对象的data
-                    // Object.assign(this.$data, this.$options.data());
-                    vm.answer = '有道查询中...'
-                    $.ajax({
-                        type: "GET",
-                        url: "http://fanyi.youdao.com/openapi.do?keyfrom=MWords&key=2006756772&type=data&doctype=jsonp&version=1.1&q=" + this.question,
-                        dataType: "jsonp",
-                        jsonpCallback:'show'
-                        // success: function (data) {
-                        //     // console.log(data);
-                        // }
-                    })
-                    // axios.get('http://fanyi.youdao.com/openapi.do?keyfrom=MWords&key=2006756772&type=data&doctype=jsonp&callback=show&version=1.1&q='+this.question, {responseType: 'jsonp'})
-                    //         .then(function (response) {
-                    //             console.log(response);
-                    //             vm.answer = _.capitalize(response.data.answer)
-                    //         })
-                    //         .catch(function (error) {
-                    //             vm.answer = 'Error! Could not reach the API. ' + error
-                    //         })
-                }
-                // 这是我们为用户停止输入等待的毫秒数
+            function () {
+                var vm = this;
+                if (this.question == '') { return; }
+                //重置Vue对象的data
+                // Object.assign(this.$data, this.$options.data());
+                vm.answer = '有道查询中...'
+                $.ajax({
+                    type: "GET",
+                    url: "http://fanyi.youdao.com/openapi.do?keyfrom=MWords&key=2006756772&type=data&doctype=jsonp&version=1.1&q=" + this.question,
+                    dataType: "jsonp",
+                    jsonpCallback: 'show'
+                    // success: function (data) {
+                    //     // console.log(data);
+                    // }
+                })
+                // axios.get('http://fanyi.youdao.com/openapi.do?keyfrom=MWords&key=2006756772&type=data&doctype=jsonp&callback=show&version=1.1&q='+this.question, {responseType: 'jsonp'})
+                //         .then(function (response) {
+                //             console.log(response);
+                //             vm.answer = _.capitalize(response.data.answer)
+                //         })
+                //         .catch(function (error) {
+                //             vm.answer = 'Error! Could not reach the API. ' + error
+                //         })
+            }
+            // 这是我们为用户停止输入等待的毫秒数
             //     2000
             // )
         }
     })
     function show(data) {
         //获取有道返回码
-        vm.errorCode = data.errorCode==0?true:false;
+        vm.errorCode = data.errorCode == 0 ? true : false;
         //提取基本词典翻译
         vm.basic = data.basic;
         //判断是否有数据
@@ -128,24 +128,24 @@
             vm.us_phonetic = data.basic['us-phonetic'];
         }
         //保持记录
-        if(vm.errorCode){saveToLibing(data);}
+        if (vm.errorCode) { saveToLibing(data); }
         //获取网络释义
         vm.webs = data.web;
         //获取基本翻译结果
         vm.answer = "<h3>翻译：" + data.translation + "</h3>";
     }
     //jsonp回掉函数
-    function saveResult(data){
+    function saveResult(data) {
         console.log(data.msg);
     }
     //ajax记录数据库
-    function saveToLibing(data){
+    function saveToLibing(data) {
         $.ajax({
-            type:"GET",
-            url:'http://localhost:8888/save',
-            data:data,
+            type: "GET",
+            url: 'http://localhost:8888/save',
+            data: data,
             dataType: "jsonp",
-            jsonpCallback:'saveResult'
+            jsonpCallback: 'saveResult'
         });
     }
 </script>
