@@ -4,22 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <title>MyWords</title>
+    <!--width=device-width 将屏幕可视区域设置为设备的宽度-->
+    <!--initial-scale=1 默认缩放级别调整为100%,通常与上面的一起设定-->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="icon" href="http://libing.win/favicon.ico">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="http://lib.sinaapp.com/js/bootstrap/latest/css/bootstrap.min.css">
     <script src="http://cdn.bootcss.com/vue/2.1.6/vue.min.js"></script>
+    <script src="http://lib.sinaapp.com/js/jquery/3.1.0/jquery-3.1.0.min.js"></script>
+
     <!--<script src="http://cdn.bootcss.com/axios/0.15.3/axios.min.js"></script>-->
     <!--<script src="http://cdn.bootcss.com/blueimp-md5/2.6.0/js/md5.min.js"></script>-->
     <!--<script scr="/js/vue.min.js"></script>-->
-    <script src="http://lib.sinaapp.com/js/jquery/3.1.0/jquery-3.1.0.min.js"></script>
-    <link rel="stylesheet" href="http://lib.sinaapp.com/js/bootstrap/latest/css/bootstrap.min.css">
     <!--<script src="https://unpkg.com/lodash@4.13.1/lodash.min.js"></script>-->
 </head>
 
 <body>
-    <div id="app">
+    <div id="app" role="main" class="main-page">
         <!--绑定question模型和回车事件-->
         <div class="input-group">
             <!--<span class="input-group-addon"></span>-->
-            <input type="text" class="form-control" name="word" v-model="question" v-on:keyup.enter="getAnswer" v-focus>
+            <input type="text" class="form-control" name="word" v-model="question" v-on:keyup.enter="getAnswer" v-focus autofocus>
         </div>
 
         <!--纯html-->
